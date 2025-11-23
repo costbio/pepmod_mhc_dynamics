@@ -55,7 +55,7 @@ gmx --version
 
 You should see GPU support enabled in the output.
 
-2. Environment Setup Script
+## 2. Environment Setup Script
 
 Create an env.sh file with the following content:
 
@@ -76,7 +76,7 @@ Usage: Source this script in every session and SLURM job:
 ```bash
 source env.sh
 ```
-3. TRUBA Node Specifications
+## 3. TRUBA Node Specifications
 
 Barbun-CUDA Nodes
 
@@ -91,7 +91,7 @@ Check Available Resources
 sinfo -p debug -C barbun-cuda
 squeue -p debug  # See current queue
 ```
-4. Interactive Debug Session
+## 4. Interactive Debug Session
 
 Start an interactive session for testing:
 ```bash
@@ -136,10 +136,10 @@ Key flags:
 -pme gpu: PME electrostatics on GPU
 -npme 1: Separate PME rank
 
-5. Performance Optimization
+## 5. Performance Optimization
 
 For 40 cores with 2 GPUs, try different -ntmpi × -ntomp combinations (must equal 40):
-# Recommended starting points:
+### Recommended starting points:
 ```bash
 gmx mdrun -deffnm nvt -v -ntmpi 2 -ntomp 20 -nb gpu -bonded gpu -pme gpu -npme 1 -pin on -nsteps 10000  # 1 rank per GPU
 gmx mdrun -deffnm nvt -v -ntmpi 4 -ntomp 10 -nb gpu -bonded gpu -pme gpu -npme 1 -pin on -nsteps 10000
@@ -153,7 +153,7 @@ Inspect Logs
 ```bash
 less md.log  # Detailed performance metrics
 ```
-6. SLURM Batch Jobs
+## 6. SLURM Batch Jobs
 
 Create a SLURM submission script run_md.sh:
 ```bash
@@ -168,17 +168,17 @@ Create a SLURM submission script run_md.sh:
 #SBATCH --gres=gpu:2                # GPUs requested
 #SBATCH --time=03:00:00             # Time limit (HH:MM:SS)
 ```
-# Print node info
+### Print node info
 ```bash
 echo "SLURM_NODELIST: $SLURM_NODELIST"
 echo "NUMBER OF CORES: $SLURM_NTASKS"
 echo "NUMBER OF CPUs: $SLURM_NPROCS"
 ```
-# Load environment
+### Load environment
 ```bash
 source /arf/home/your_username/env.sh
 ```
-# Run simulation
+### Run simulation
 ```bash
 gmx mdrun -s md.tpr \
           -nsteps 500000 \
@@ -207,7 +207,7 @@ scancel <job_id>                     # Cancel job
 
 sacct -j <job_id> --format=JobID,JobName,Elapsed,State  # Job history
 ```
-7. Tips and Common Issues
+## 7. Tips and Common Issues
 
 GPU not detected: Ensure -C barbun-cuda or any gpu node constraint is set
 Slow performance: Try different -ntmpi/-ntomp combinations
